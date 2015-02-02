@@ -2,7 +2,7 @@
 #define COORD_H
 
 #include <iostream>
-#include <GL/glut.h>
+#include "GlutInclude.h"
 
 using namespace std;
 
