@@ -41,7 +41,8 @@ void Segment::display() {
 }
 
 ostream& operator<<(ostream &flux, Segment& v) {
-    flux << "[" <<  "]";
+   // flux << "[" <<  "]";
+   // flux << "[" << v.x->getX() <<  "]";
     return flux;
 }
 

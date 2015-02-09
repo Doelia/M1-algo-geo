@@ -87,8 +87,8 @@ GLvoid initGL()
 // à initialiser
 void init_scene()
 {
-  //srand(time(NULL));
-  srand(2);
+  srand(time(NULL));
+  //srand(2);
    glPointSize(10);
 }
 
@@ -133,16 +133,10 @@ GLvoid window_key(unsigned char key, int x, int y)
   case KEY_ESC:  
     exit(1);                    
     break; 
-
-  default:
-    printf ("La touche %d n´est pas active.\n", key);
-    break;
   }     
 
   render_scene();
 }
-
-
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -150,11 +144,8 @@ GLvoid window_key(unsigned char key, int x, int y)
 /////////////////////////////////////////////////////////////////////////////////////////
 void render_scene()
 {
-
   glClear(GL_COLOR_BUFFER_BIT);
-  
   exec();
-   
   glFlush();
 
 }
