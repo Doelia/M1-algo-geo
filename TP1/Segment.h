@@ -2,7 +2,7 @@
 #define SEGMENT_H
 
 #include "Coord.h"
-#include <GL/glut.h>
+#include "GlutInclude.h"
 #include <vector>
 
 using namespace std;

@@ -22,7 +22,8 @@ Vous pouvez ensuite y faire référence en spécifiant le chemin dans visual. Vo
 Si vous mettez glut dans le répertoire courant, on aura alors #include "glut.h" 
 */
 
-#include <GL/glut.h> 
+#include "GlutInclude.h"
+
 
 // Définition de la taille de la fenêtre
 #define WIDTH  612
@@ -42,7 +43,7 @@ Si vous mettez glut dans le répertoire courant, on aura alors #include "glut.h"
 // Entêtes de fonctions
 void init_scene();
 void render_scene();
-GLvoid initGL();
+GLvoid _initGL();
 GLvoid window_display();
 GLvoid window_reshape(GLsizei width, GLsizei height); 
 GLvoid window_key(unsigned char key, int x, int y); 
@@ -60,7 +61,7 @@ int main(int argc, char **argv)
   glutCreateWindow("Premier exemple : carré");
 
   // initialisation de OpenGL et de la scène
-  initGL();  
+  _initGL();  
   init_scene();
 
   // choix des procédures de callback pour 
@@ -78,7 +79,7 @@ int main(int argc, char **argv)
 }
 
 // initialisation du fond de la fenêtre graphique : noir opaque
-GLvoid initGL() 
+GLvoid _initGL() 
 {
   glClearColor(RED, GREEN, BLUE, ALPHA);        
 }
