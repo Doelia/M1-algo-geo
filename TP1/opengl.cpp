@@ -89,7 +89,7 @@ GLvoid _initGL()
 void init_scene()
 {
   srand(time(NULL));
-  //srand(2);
+ //srand(2);
    glPointSize(10);
 }
 
