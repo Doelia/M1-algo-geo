@@ -14,8 +14,7 @@
 #include <math.h>
 #include "Vector.h"
 #include "Point.h"
-#include "tp1.h"
-#include <time.h>
+#include "main.h"
 
 /* Dans les salles de TP, vous avez généralement accès aux glut dans C:\Dev. Si ce n'est pas le cas, téléchargez les .h .lib ...
 Vous pouvez ensuite y faire référence en spécifiant le chemin dans visual. Vous utiliserez alors #include <glut.h>. 
