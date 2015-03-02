@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include <algorithm>
 
 Point** generatePointRandom(int n) {
 	Point** tab = new Point*[n];
@@ -58,6 +59,58 @@ Point* getPointDiffOf(Point** tab, int n, Point* p) {
 	return NULL;
 }
 
+
+
+
+vector<Point*> graham(Point** tab, int n) {
+	Point* pMin = getPointOrdiMin(tab, n);
+	cout << "pMin = " << *pMin << endl;
+	vector<Point*> Q;
+	for (int i = 0; i < n; ++i) {
+		if (tab[i] != pMin)
+			Q.push_back(tab[i]);
+	}
+
+	std::sort(Q.begin(), Q.end(), [=] (Point* a, Point* b) {
+		return (anglePolaireInferieur(pMin, a, b));
+	});
+
+	cout << "SORT OK" << endl;
+
+	stack<Point*> l;
+	l.push(pMin);
+	l.push(Q[0]);
+	l.push(Q[1]);
+	cout << "start algo" << endl;
+	for (int i = 3; i < n-1; ++i) {
+		cout << "i = " << i << endl;
+
+		Vector* v;
+		Vector* v2;
+		do {
+			Point* dernier = l.top(); l.pop();
+			Point* avantDernier = l.top();
+			v = new Vector(avantDernier, dernier);
+			v2 = new Vector(avantDernier, Q[i]);
+			l.push(dernier);
+			if (v->getDeter(v2) > 0)
+				l.pop();
+		} while (v->getDeter(v2) > 0);
+
+		l.push(Q[i]);
+	}
+	l.push(pMin);
+	l.push(Q[n-2]);
+
+
+	vector<Point*> list;
+	while (l.size() > 0) {
+		list.push_back(l.top());
+		l.pop();
+	}
+	return list;
+}
+
 vector<Point*> jarvis(Point** tab, int n) {
 	vector<Point*> list;
 
@@ -82,14 +135,13 @@ vector<Point*> jarvis(Point** tab, int n) {
 
 
 void exec() {
-	int n = 500;
+	int n = 1000;
 	Point** pts = generatePointRandomInCircle(n);
 
 	glColor3f(1, 0, 1);
 	Point::displayAll(pts, n, false);
 
-
-	vector<Point*> list = jarvis(pts, n);
+	vector<Point*> list = graham(pts, n);
 	Point** enveloppe = new Point*[list.size()];
 	for (int i = 0; i < list.size(); ++i)	{
 		enveloppe[i] = list[i];
@@ -99,9 +151,7 @@ void exec() {
 	glLineWidth(5);
 	Point::displayAll(enveloppe, list.size(), true);
 
-
 	/*
-
 	Point p0(0,1,0);
 	Point p1(2,1,0);
 	Point p2(1,2,0);

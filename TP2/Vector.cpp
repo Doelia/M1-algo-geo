@@ -44,7 +44,7 @@ double Vector::getAngle(Vector* v) {
 	return acos(
 		this->getScalar(v)/
 			(this->getNorme() *v->getNorme())
-			);
+	);
 }
 
 
