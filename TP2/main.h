@@ -131,13 +131,13 @@ vector<Point*> jarvis(Point** tab, int n) {
 
 
 void exec() {
-	int n = 1000;
+	int n = 10;
 	Point** pts = generatePointRandomInCircle(n);
 
 	glColor3f(1, 0, 1);
 	Point::displayAll(pts, n, false);
 
-	vector<Point*> list = graham(pts, n);
+	vector<Point*> list = jarvis(pts, n);
 	Point** enveloppe = new Point*[list.size()];
 	for (int i = 0; i < list.size(); ++i)	{
 		enveloppe[i] = list[i];
@@ -147,18 +147,7 @@ void exec() {
 	glLineWidth(5);
 	Point::displayAll(enveloppe, list.size(), true);
 
-	/*
-	Point p0(0,1,0);
-	Point p1(2,1,0);
-	Point p2(1,2,0);
-
-	if (anglePolaireInferieur(&p0, &p1, &p2)) {
-		cout << "oui" << endl;
-	} else {
-		cout << "non" << endl;
-	}
-	*/
-
+	
 
 }
 
