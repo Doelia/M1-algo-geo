@@ -11,13 +11,26 @@
 
 vector<Point*> points;
 
+bool isValid(Point* p) {
+	for (auto i : points) {
+		if (i->getY() == p->getY() || i->getX() == p->getX())
+			return false;
+	}
+	return true;
+}
+
 void generer(int n) {
 	points.clear();
 	for (int i = 0; i < n; i++) {
-		Point* p1 = new Point(rand()%612, rand()%792, 0);
-		points.push_back(p1);
+		Point* p1 = new Point(rand()%400+50, rand()%600+50, 0);
+		if (isValid(p1))
+			points.push_back(p1);
+		else
+			i--;
 	}
 }
+
+
 
 Point* getPoint(int indice) {
 	return points[indice];
@@ -40,6 +53,14 @@ public:
 			getPoint(a)->draw();
 			glEnd();
 		}
+	}
+
+	vector<int> getSommets() {
+		vector<int> v;
+		v.push_back(a);
+		v.push_back(b);
+		v.push_back(c);
+		return v;
 	}
 
 	void displayCoords() {
@@ -73,21 +94,16 @@ vector<Triangle*> triangulation() {
 
 	for (int i = 2; i < points.size()-1; ++i) {
 
-		cout << "Traitement i=" << i << endl;
-
-		cout << "Calcul des points en haut..." << endl;
-
 		int j = 0;
 		while (true) {
 			Vector a(points[i+1], points[EC[j]]);
 			Vector b(points[i+1], points[EC[j+1]]);
-			cout << "Deter entre (" << i+1 << ", " << EC[j] << ") et (" << i+1 << ", " << EC[j+1] << ")" << endl;
 			if (a.getDeter(&b) < 0) {
 				Triangle* nouv = new Triangle();
 				nouv->a = EC[j];
 				nouv->b = EC[j+1];
 				nouv->c = i+1;
-				nouv->displayCoords();
+				//nouv->displayCoords();
 				T.push_back(nouv);
 				j++;
 			}
@@ -97,20 +113,17 @@ vector<Triangle*> triangulation() {
 		}
 		int kDroite = j;
 
-		cout << "Calcul des points en bas..." << endl;
-
 
 		j = EC.size()-1;
 		while (true) {
 			Vector a(points[i+1], points[EC[j]]);
 			Vector b(points[i+1], points[EC[j-1]]);
-			cout << "Deter entre (" << i+1 << ", " << EC[j] << ") et (" << i+1 << ", " << EC[j-1] << ")" << endl;
 			if (a.getDeter(&b) > 0) {
 				Triangle* nouv = new Triangle();
 				nouv->a = EC[j];
 				nouv->b = EC[j-1];
 				nouv->c = i+1;
-				nouv->displayCoords();
+				//nouv->displayCoords();
 				T.push_back(nouv);
 				j--;
 			}
@@ -119,8 +132,6 @@ vector<Triangle*> triangulation() {
 			}
 		}
 		int kGauche = j;
-
-		cout << "Recalcul de l'EC..." << endl;
 
 		vector<int> copy;
 		copy.push_back(i+1);
@@ -152,14 +163,119 @@ void trierWithAbssice() {
 	});
 }
 
+// Intervertit l'arret IJ dans les triangles t1 et t2
+void flip(Triangle* t1, Triangle* t2) {
+
+	vector<int> flip;
+	vector<int> flop;
+	for (auto i : t1->getSommets()) {
+		for (auto j : t2->getSommets()) {
+			if (i == j) {
+				flip.push_back(i);
+			}	
+		}
+	}
+
+	for (auto i : t1->getSommets()) {
+		if (find(flip.begin(), flip.end(), i) == flip.end()) {
+			flop.push_back(i);
+		}
+	}
+	for (auto i : t2->getSommets()) {
+		if (find(flip.begin(), flip.end(), i) == flip.end()) {
+			flop.push_back(i);
+		}
+	}
+
+	t1->a = flip[0];
+	t1->b = flop[1];
+	t1->c = flop[0];
+
+	t2->a = flop[0];
+	t2->b = flip[1];
+	t2->c = flop[1];
+
+}
+
+void circumCircleCenter(double x1, double y1, double x2, double y2, double x3, double y3, double &x, double &y)
+{
+  double v,m1, m2, m3, n1, n2, n3;
+  m1 = 2.*(x3-x2); m2 = -2.*(y2-y3); m3 = (y2-y3)*(y2+y3)-(x3-x2)*(x2+x3);
+  n1 = 2.*(x3-x1); n2 = -2.*(y1-y3); n3 = (y1-y3)*(y1+y3)-(x3-x1)*(x1+x3);
+  v=1./(n2*m1-n1*m2);
+  x = v*(n3*m2-n2*m3);
+  y = v*(n1*m3-n3*m1);
+}
+
+bool flipPossible(Triangle t1, Triangle t2) {
+
+	vector<int> points = t2.getSommets();
+	for (auto i : t1.getSommets()) {
+		points.erase(remove(points.begin(), points.end(), i), points.end());
+	}
+	if (points.size() != 1) {
+		return false;
+	}
+	int pointOut = points[0];
+	vector<int> pointIn = t1.getSommets();
+	int a = pointIn[0];
+	int b = pointIn[1];
+	int c = pointIn[2];
+	int d = pointOut;
+
+	Vector da(getPoint(d), getPoint(a));
+	Vector db(getPoint(d), getPoint(b));
+	Vector ca(getPoint(c), getPoint(a));
+	Vector cb(getPoint(c), getPoint(b));
+
+	double x;
+	double y;
+	circumCircleCenter(
+		getPoint(a)->getX(), getPoint(a)->getY(),
+		getPoint(b)->getX(), getPoint(b)->getY(),
+		getPoint(c)->getX(), getPoint(c)->getY(),
+		x, y);
+	Point center(x,y,0);
+	Vector v(&center, getPoint(a));
+	Vector toD(&center, getPoint(d));
+
+	return (v.getNorme() > toD.getNorme());
+	//return (da.getNorme() * cb.getNorme() * ca.getScalar(&db) <= da.getNorme() * db.getNorme() * ca.getScalar(&cb));
+}
+
+void delaunay(vector<Triangle*> triangles) {
+	bool flipped = true;
+	while (flipped) {
+		flipped = false;
+		for (auto i : triangles) {
+			for (auto j : triangles) {
+				if (flipPossible(*i, *j)) {
+					flip(i, j);
+					flipped = true;
+				}
+			}
+		}
+	}
+}
+
 void exec() {
 
-	int n = 5;
+	int n = 100;
 	generer(n);
 	trierWithAbssice();
 	Point::displayAll(vectorToTab(points), n, false);
 
 	vector<Triangle*> triangles = triangulation();
+
+	glColor4f(1,0,0,0.5f);
+
+	for (Triangle* v : triangles) {
+		v->afficher();
+	}
+
+	glColor4f(0,1,0,0.5f);
+	delaunay(triangles);
+
 	for (Triangle* v : triangles) {
 		v->afficher();
 	}

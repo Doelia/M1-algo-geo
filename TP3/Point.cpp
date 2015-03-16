@@ -11,16 +11,16 @@ void Point::displayAll(Point** list, int n, bool relier) {
 	for (int i=0; i < n; i++) {
 		Point* j = list[i];
 		j->display();
-		glRasterPos2f(j->getX()+3, j->getY());
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, i);
+		//glRasterPos2f(j->getX()+3, j->getY());
+		//glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, i);
 	}
 	glEnd();
 
 	for (int i=0; i < n; i++) {
 		Point* j = list[i];
-		glRasterPos2f(j->getX()+3, j->getY());
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, i/10+'0');
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, i%10+'0');
+		//glRasterPos2f(j->getX()+3, j->getY());
+		//glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, i/10+'0');
+		//glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, i%10+'0');
 	}
 }
 
