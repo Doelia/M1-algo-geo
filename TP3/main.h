@@ -223,11 +223,6 @@ bool flipPossible(Triangle t1, Triangle t2) {
 	int c = pointIn[2];
 	int d = pointOut;
 
-	Vector da(getPoint(d), getPoint(a));
-	Vector db(getPoint(d), getPoint(b));
-	Vector ca(getPoint(c), getPoint(a));
-	Vector cb(getPoint(c), getPoint(b));
-
 	double x;
 	double y;
 	circumCircleCenter(
