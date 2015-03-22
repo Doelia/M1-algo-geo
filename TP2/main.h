@@ -8,6 +8,8 @@
 #include <stack>
 #include <algorithm>
 
+vector<Point*> jarvis(Point** tab, int n);
+
 Point** generatePointRandom(int n) {
 	Point** tab = new Point*[n];
 
@@ -16,6 +18,10 @@ Point** generatePointRandom(int n) {
 		tab[i] = p1;
 	}
 	return tab;
+}
+
+vector<Point*> retournerPoints(Point** tab, int n) {
+	return jarvis(tab, n);
 }
 
 Point** generatePointRandomInCircle(int n) {
@@ -61,6 +67,28 @@ Point* getPointDiffOf(Point** tab, int n, Point* p) {
 
 
 
+vector<Point*> jarvis(Point** tab, int n) {
+	vector<Point*> list;
+
+	Point* pMin = getPointOrdiMin(tab, n);
+	Point* pCourant = pMin;
+
+	list.push_back(pCourant);
+
+	do {
+		Point* plusADroite = getPointDiffOf(tab, n, pCourant);
+		for (int i = 0; i < n; ++i) {
+			if (tab[i] != pCourant && anglePolaireInferieur(pCourant, plusADroite, tab[i])) {
+				plusADroite = tab[i];
+			}
+		}
+		list.push_back(plusADroite);
+		pCourant = plusADroite;
+	} while (pCourant != pMin);
+
+	return list;
+}
+
 
 vector<Point*> graham(Point** tab, int n) {
 	Point* pMin = getPointOrdiMin(tab, n);
@@ -104,40 +132,19 @@ vector<Point*> graham(Point** tab, int n) {
 		list.push_back(l.top());
 		l.pop();
 	}
-	return list;
-}
-
-vector<Point*> jarvis(Point** tab, int n) {
-	vector<Point*> list;
-
-	Point* pMin = getPointOrdiMin(tab, n);
-	Point* pCourant = pMin;
-
-	list.push_back(pCourant);
-
-	do {
-		Point* plusADroite = getPointDiffOf(tab, n, pCourant);
-		for (int i = 0; i < n; ++i) {
-			if (tab[i] != pCourant && anglePolaireInferieur(pCourant, plusADroite, tab[i])) {
-				plusADroite = tab[i];
-			}
-		}
-		list.push_back(plusADroite);
-		pCourant = plusADroite;
-	} while (pCourant != pMin);
-
-	return list;
+	
+	return retournerPoints(tab, n);
 }
 
 
 void exec() {
-	int n = 10;
+	int n = 100;
 	Point** pts = generatePointRandomInCircle(n);
 
 	glColor3f(1, 0, 1);
 	Point::displayAll(pts, n, false);
 
-	vector<Point*> list = jarvis(pts, n);
+	vector<Point*> list = graham(pts, n);
 	Point** enveloppe = new Point*[list.size()];
 	for (int i = 0; i < list.size(); ++i)	{
 		enveloppe[i] = list[i];

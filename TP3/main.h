@@ -255,7 +255,7 @@ void delaunay(vector<Triangle*> triangles) {
 
 void exec() {
 
-	int n = 100;
+	int n = 90;
 	generer(n);
 	trierWithAbssice();
 	Point::displayAll(vectorToTab(points), n, false);
