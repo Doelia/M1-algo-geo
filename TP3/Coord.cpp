@@ -54,3 +54,8 @@ ostream& operator<<(ostream &flux, Coord& v) {
     return flux;
 }
 
+bool Coord::equals(Coord& c) {
+	return ((c.getX() == this->getX() || c.getY() == this->getY()) && c.getZ() == this->getZ());
+}
+
+

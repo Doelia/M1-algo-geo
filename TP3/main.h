@@ -7,6 +7,7 @@
 #include <vector>
 #include <stack>
 #include <algorithm>
+#include "tests.h"
 
 
 vector<Point*> points;
@@ -22,7 +23,7 @@ bool isValid(Point* p) {
 void generer(int n) {
 	points.clear();
 	for (int i = 0; i < n; i++) {
-		Point* p1 = new Point(rand()%400+50, rand()%600+50, 0);
+		Point* p1 = new Point(rand()%500+50, rand()%600+50, 0);
 		if (isValid(p1))
 			points.push_back(p1);
 		else
@@ -42,17 +43,23 @@ public:
 	int b;
 	int c;
 
+	Triangle() {
+
+	}
+
+	Triangle(int a, int b, int c) {
+		this->a = a;
+		this->b = b;
+		this->c = c;
+	}
+
 	void afficher() {
-		if (a < 100 && b < 100 && c < 100) {
-			glBegin(GL_LINES);
-			getPoint(a)->draw();
-			getPoint(b)->draw();
-			getPoint(b)->draw();
-			getPoint(c)->draw();
-			getPoint(c)->draw();
-			getPoint(a)->draw();
-			glEnd();
-		}
+		glBegin(GL_LINE_STRIP);
+		getPoint(a)->draw();
+		getPoint(b)->draw();
+		getPoint(c)->draw();
+		getPoint(a)->draw();
+		glEnd();
 	}
 
 	vector<int> getSommets() {
@@ -94,16 +101,19 @@ vector<Triangle*> triangulation() {
 
 	for (int i = 2; i < points.size()-1; ++i) {
 
+		/*if (points[i+1]->equals(*points[i])) {
+			continue;
+		}*/
+
 		int j = 0;
 		while (true) {
 			Vector a(points[i+1], points[EC[j]]);
 			Vector b(points[i+1], points[EC[j+1]]);
-			if (a.getDeter(&b) < 0) {
+			if (a.getDeter(&b) <= 0) {
 				Triangle* nouv = new Triangle();
 				nouv->a = EC[j];
 				nouv->b = EC[j+1];
 				nouv->c = i+1;
-				//nouv->displayCoords();
 				T.push_back(nouv);
 				j++;
 			}
@@ -118,12 +128,11 @@ vector<Triangle*> triangulation() {
 		while (true) {
 			Vector a(points[i+1], points[EC[j]]);
 			Vector b(points[i+1], points[EC[j-1]]);
-			if (a.getDeter(&b) > 0) {
+			if (a.getDeter(&b) >= 0) {
 				Triangle* nouv = new Triangle();
 				nouv->a = EC[j];
 				nouv->b = EC[j-1];
 				nouv->c = i+1;
-				//nouv->displayCoords();
 				T.push_back(nouv);
 				j--;
 			}
@@ -207,6 +216,25 @@ void circumCircleCenter(double x1, double y1, double x2, double y2, double x3, d
   y = v*(n1*m3-n3*m1);
 }
 
+Point getCenter(Triangle t) {
+	double x,y;
+	circumCircleCenter(
+		getPoint(t.a)->getX(), getPoint(t.a)->getY(),
+		getPoint(t.b)->getX(), getPoint(t.b)->getY(),
+		getPoint(t.c)->getX(), getPoint(t.c)->getY(),
+		x, y);
+
+	Point p (x,y,0);
+	return p;
+}
+
+double getRayon(Triangle t) {
+	Point center;
+	center = getCenter(t);
+	Vector v(&center, getPoint(t.a));
+	return v.getNorme();
+}
+
 bool flipPossible(Triangle t1, Triangle t2) {
 
 	vector<int> points = t2.getSommets();
@@ -230,7 +258,8 @@ bool flipPossible(Triangle t1, Triangle t2) {
 		getPoint(b)->getX(), getPoint(b)->getY(),
 		getPoint(c)->getX(), getPoint(c)->getY(),
 		x, y);
-	Point center(x,y,0);
+	Point center;
+	center = getCenter(Triangle(a,b,c));
 	Vector v(&center, getPoint(a));
 	Vector toD(&center, getPoint(d));
 
@@ -239,10 +268,13 @@ bool flipPossible(Triangle t1, Triangle t2) {
 }
 
 void delaunay(vector<Triangle*> triangles) {
+	cout << "Nous allons traiter " << triangles.size() << " triangles" << endl;
 	bool flipped = true;
 	while (flipped) {
 		flipped = false;
+		int cptI = 0;
 		for (auto i : triangles) {
+			cout << "Traitement du triangle " << cptI++ << "..." << endl;
 			for (auto j : triangles) {
 				if (flipPossible(*i, *j)) {
 					flip(i, j);
@@ -253,9 +285,8 @@ void delaunay(vector<Triangle*> triangles) {
 	}
 }
 
-void exec() {
-
-	int n = 90;
+void tp3() {
+	int n = 200;
 	generer(n);
 	trierWithAbssice();
 	Point::displayAll(vectorToTab(points), n, false);
@@ -272,9 +303,56 @@ void exec() {
 	delaunay(triangles);
 
 	for (Triangle* v : triangles) {
-		v->afficher();
+		//v->afficher();
+	}
+}
+
+void alphaComplexe(float alpha) {
+	trierWithAbssice();
+
+	vector<Triangle*> triangles = triangulation();
+	cout << "Triangles OK" << endl;
+
+	for (Triangle* v : triangles) {
+		//v->afficher();
 	}
 
+	//*
+	delaunay(triangles);
+	cout << "Delaunay OK" << endl;
+
+	cout << "Calcul des rayon" << endl;
+	for (Triangle* v : triangles) {
+		float rayon = getRayon(*v);
+		if (rayon < alpha) {
+			v->afficher();
+		}
+	}
+	//*/
+
+}
+
+bool ok = false;
+
+void exec() {
+	if (ok)
+		return;
+
+	//tp3();
+	//*
+	const int n = 800;
+	Point** sommet = sommets_801;
+
+	points.clear();
+
+	for (int i = 0; i < n; ++i) {
+		points.push_back(sommet[i]);
+	}
+	Point::displayAll(vectorToTab(points), n, false);
+
+	alphaComplexe(5000);
+	//*/
+	ok = true;
 }
 
 #endif

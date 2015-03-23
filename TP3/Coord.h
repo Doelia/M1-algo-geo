@@ -16,6 +16,8 @@ public:
 	Coord();
 	Coord(Coord&);
 
+	bool equals(Coord&);
+
 	virtual void draw();
 	virtual double getX();
 	virtual double getY();

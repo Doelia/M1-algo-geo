@@ -1,5 +1,7 @@
 #include "Point.h"
 
+const bool displayNums = false;
+
 Point* Point::projectOnLine(Point* b, Point *c) {
 	Vector* u = new Vector(b,c);
 	cout << "u = " << *u << endl;
@@ -11,16 +13,17 @@ void Point::displayAll(Point** list, int n, bool relier) {
 	for (int i=0; i < n; i++) {
 		Point* j = list[i];
 		j->display();
-		//glRasterPos2f(j->getX()+3, j->getY());
-		//glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, i);
 	}
 	glEnd();
 
 	for (int i=0; i < n; i++) {
 		Point* j = list[i];
-		//glRasterPos2f(j->getX()+3, j->getY());
-		//glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, i/10+'0');
-		//glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, i%10+'0');
+		glRasterPos2f(j->getX()+3, j->getY());
+		if (displayNums) {
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, i/100+'0');
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ((i%100) / 10)+'0');
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, i%10+'0');
+		}
 	}
 }
 
