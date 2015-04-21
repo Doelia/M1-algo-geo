@@ -8,6 +8,10 @@ Point* Point::projectOnLine(Point* b, Point *c) {
 	return this->projectOnLine(u, b);
 }
 
+bool Point::equals(Point* p) {
+  return this->x == p->x && this->y == p->y && this->z == p->z;
+}
+
 void Point::displayAll(Point** list, int n, bool relier) {
 	!relier?glBegin(GL_POINTS):glBegin(GL_LINE_STRIP);
 	for (int i=0; i < n; i++) {

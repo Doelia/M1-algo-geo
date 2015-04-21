@@ -69,6 +69,16 @@ class Triangle {
     return v;
   }
 
+  bool equals(Triangle* t) {
+    int cpt = 0;
+    for (auto i : this->getSommets()) {
+      for (auto j : t->getSommets()) {
+	cpt += (i == j);
+      }
+    }
+    return cpt == 3;
+  }
+
   void displayCoords() {
     cout << "Triangle: " << a << ", " << b << ", " << c << "." << endl;
   }
@@ -185,14 +195,47 @@ std::vector<Triangle*> getVoisinsForTriangle(Triangle* t, std::vector<Triangle*>
   return voisins;
 }
 
-// Intervertit l'arret IJ dans les triangles t1 et t2
-void flip(Triangle* t1, Triangle* t2) {
+bool vectorContains(std::vector<Triangle*> triangles, Triangle* t) {
+  for (auto i : triangles) {
+    if(i->equals(t))
+      return true;
+  }
+  return false;
+}
 
-  std::vector<Triangle*> voisinst1 = t1->voisins;
-  voisinst1.erase(remove(voisinst1.begin(), voisinst1.end(), t1), voisinst1.end());
+std::vector<Triangle*> removeTriangle(std::vector<Triangle*> triangles, Triangle* t) {
+  std::vector<Triangle*> var;
+  for (auto i : triangles) {
+    if(!i->equals(t))
+      var.push_back(i);
+  }
+  return var;
+}
+
+// Intervertit l'arret IJ dans les triangles t1 et t2
+void flip(Triangle* t1, Triangle* t2, std::vector<Triangle*> var) {
+  std::vector<Triangle*> triangles;
+
+  for (auto i : t1->voisins) {
+    if(!i->equals(t2)) {
+      triangles.push_back(i);
+      i->voisins = removeTriangle(i->voisins, t1);
+    }
+  }
   
-  std::vector<Triangle*> voisinst2 = t2->voisins;
-  voisinst2.erase(remove(voisinst2.begin(), voisinst2.end(), t2), voisinst2.end());
+  for (auto i : t2->voisins) {
+    if(!i->equals(t1)) {
+      triangles.push_back(i);
+      i->voisins = removeTriangle(i->voisins, t2);
+    }
+  }
+
+  triangles.push_back(t1);
+  triangles.push_back(t2);
+  t1->voisins.clear();
+  t2->voisins.clear();
+
+  // std::cout << triangles.size() << std::endl;
 
   vector<int> flip;
   vector<int> flop;
@@ -223,27 +266,12 @@ void flip(Triangle* t1, Triangle* t2) {
   t2->b = flip[1];
   t2->c = flop[1];
 
-  std::vector<Triangle*> triangles;
-
-  for (auto i : voisinst1) {
-    triangles.push_back(i);
+  for (auto i : triangles) {
+    std::vector<Triangle*> t =  getVoisinsForTriangle(i, triangles);
+    for (auto j : t) {
+      i->voisins.push_back(j);
+    }
   }
-  for (auto i : voisinst2) {
-    triangles.push_back(i);
-  }
-  triangles.push_back(t1);
-  triangles.push_back(t2);
-
-  for (auto i : voisinst1) {
-    i->voisins = getVoisinsForTriangle(i, triangles);
-  }
-
-  for (auto i : voisinst2) {
-    i->voisins = getVoisinsForTriangle(i, triangles);
-  }
-  
-  t1->voisins = getVoisinsForTriangle(t1, triangles);
-  t2->voisins = getVoisinsForTriangle(t2, triangles);
 }
 
 void circumCircleCenter(double x1, double y1, double x2, double y2, double x3, double y3, double &x, double &y)
@@ -276,18 +304,14 @@ double getRayon(Triangle t) {
 }
 
 bool flipPossible(Triangle t1, Triangle t2) {
-
-  vector<int> points = t1.getSommets();
-  for (auto i : t2.getSommets()) {
+    vector<int> points = t2.getSommets();
+  for (auto i : t1.getSommets()) {
     points.erase(remove(points.begin(), points.end(), i), points.end());
   }
   if (points.size() != 1) {
-    // std::cout << "error" << std::endl;
-    // for (auto i : points) {
-      // std::cout << i << std::endl;
-    // }
     return false;
   }
+  // std::cout << "avant pointout" << std::endl;
   int pointOut = points[0];
   vector<int> pointIn = t1.getSommets();
   int a = pointIn[0];
@@ -305,7 +329,6 @@ bool flipPossible(Triangle t1, Triangle t2) {
   center = getCenter(Triangle(a,b,c));
   Vector v(&center, getPoint(a));
   Vector toD(&center, getPoint(d));
-
   return (v.getNorme() > toD.getNorme());
 }
 
@@ -318,15 +341,15 @@ void matriceAdjacence(std::vector<Triangle*> triangles) {
 void delaunay(vector<Triangle*> triangles) {
   cout << "Nous allons traiter " << triangles.size() << " triangles" << endl;
   bool flipped = true;
+  int cpt = 0;
   while (flipped) {
     flipped = false;
-    int cpt = 0;
+    std::cout << cpt++ << std::endl;
     for (auto i : triangles) {
       for (auto j : i->voisins) {
 	if(flipPossible(*i, *j)) {
-	  std::cout << "avant flip" << std::endl;
-	  flip(i, j);
-	  std::cout << "apres flip" << std::endl;
+	  flip(i, j, triangles);
+	  flipped = true;
 	  break;
 	}
       }
@@ -365,10 +388,6 @@ void alphaComplexe(float alpha, std::vector<Triangle*> triangles) {
   delaunay(triangles);
   cout << "Delaunay OK" << endl;
 
-  for (auto i : triangles) {
-    i->displayCoords();
-  }
-
   cout << "Calcul des rayon" << endl;
   for (Triangle* v : triangles) {
     float rayon = getRayon(*v);
@@ -382,6 +401,15 @@ void alphaComplexe(float alpha, std::vector<Triangle*> triangles) {
 
 bool ok = false;
 
+bool vectorContainsPoint(std::vector<Point*> v, Point* p) {
+  for (auto i : v) {
+    if(i->equals(p)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 void exec() {
   if (ok)
     return;
@@ -394,19 +422,22 @@ void exec() {
   points.clear();
 
   for (int i = 0; i < n; ++i) {
-    points.push_back(sommet[i]);
+    if(!vectorContainsPoint(points, sommet[i]))
+      points.push_back(sommet[i]);
   }
-  // generer(10);
-  Point::displayAll(vectorToTab(points), n, false);
-
+  // generer(n);
+  std::cout << points.size() << std::endl;
+  Point::displayAll(vectorToTab(points), points.size(), false);
+  std::cout << "generation ok" << std::endl;
   trierWithAbssice();
-
+  cout << "tri ok" << endl;
   vector<Triangle*> triangles = triangulation();
   cout << "Triangles OK" << endl;
 
   matriceAdjacence(triangles);
   
   alphaComplexe(5000, triangles);
+
   //*/
   ok = true;
 }

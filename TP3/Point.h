@@ -16,6 +16,7 @@ public:
 	Point* projectOnLine(Vector*, Point*);
 	Point* projectOnPlan(Point*, Vector*);
 	static void displayAll(Point** list, int n, bool);
+	bool equals(Point* p);
 };
 
 #endif
