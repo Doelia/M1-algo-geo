@@ -7,6 +7,7 @@
 #include <vector>
 #include <stack>
 #include <algorithm>
+#include <map>
 #include "tests.h"
 
 
@@ -14,7 +15,7 @@ vector<Point*> points;
 
 bool isValid(Point* p) {
   for (auto i : points) {
-    if (i->getY() == p->getY() || i->getX() == p->getX())
+    if (i->getX() == p->getX() && i->getY() == p->getY())
       return false;
   }
   return true;
@@ -26,8 +27,8 @@ void generer(int n) {
     Point* p1 = new Point(rand()%500+50, rand()%600+50, 0);
     if (isValid(p1))
       points.push_back(p1);
-    else
-      i--;
+    // else
+    //   i--;
   }
 }
 
@@ -177,8 +178,18 @@ Point** vectorToTab(vector<Point*> pts) {
 
 void trierWithAbssice() {
   std::sort(points.begin(), points.end(), [=] (Point* a, Point* b) {
+      if(a->getX() == b->getX())
+	return a->getY() < b->getY();
       return a->getX() < b->getX();
     });
+}
+
+bool vectorContains(std::vector<Triangle*> triangles, Triangle* t) {
+  for (auto i : triangles) {
+    if(i->equals(t))
+      return true;
+  }
+  return false;
 }
 
 std::vector<Triangle*> getVoisinsForTriangle(Triangle* t, std::vector<Triangle*> triangles) {
@@ -188,19 +199,11 @@ std::vector<Triangle*> getVoisinsForTriangle(Triangle* t, std::vector<Triangle*>
     for (auto i : t1->getSommets()) {
       points.erase(remove(points.begin(), points.end(), i), points.end());
     }
-    if (points.size() == 1) {
+    if (points.size() == 1 && !vectorContains(voisins, t1)) {
       voisins.push_back(t1);
     }
   }
   return voisins;
-}
-
-bool vectorContains(std::vector<Triangle*> triangles, Triangle* t) {
-  for (auto i : triangles) {
-    if(i->equals(t))
-      return true;
-  }
-  return false;
 }
 
 std::vector<Triangle*> removeTriangle(std::vector<Triangle*> triangles, Triangle* t) {
@@ -219,13 +222,17 @@ void flip(Triangle* t1, Triangle* t2, std::vector<Triangle*> var) {
   for (auto i : t1->voisins) {
     if(!i->equals(t2)) {
       triangles.push_back(i);
+      // i->voisins.erase(remove(i->voisins.begin(), i->voisins.end(), t1), i->voisins.end());
       i->voisins = removeTriangle(i->voisins, t1);
+      // i->voisins = removeTriangle(i->voisins, t2);
     }
   }
   
   for (auto i : t2->voisins) {
     if(!i->equals(t1)) {
       triangles.push_back(i);
+      // i->voisins.erase(remove(i->voisins.begin(), i->voisins.end(), t2), i->voisins.end());
+      // i->voisins = removeTriangle(i->voisins, t1);
       i->voisins = removeTriangle(i->voisins, t2);
     }
   }
@@ -267,7 +274,7 @@ void flip(Triangle* t1, Triangle* t2, std::vector<Triangle*> var) {
   t2->c = flop[1];
 
   for (auto i : triangles) {
-    std::vector<Triangle*> t =  getVoisinsForTriangle(i, triangles);
+    std::vector<Triangle*> t =  getVoisinsForTriangle(i, (triangles.size() > 100)?var:triangles);
     for (auto j : t) {
       i->voisins.push_back(j);
     }
@@ -286,8 +293,7 @@ void circumCircleCenter(double x1, double y1, double x2, double y2, double x3, d
 
 Point getCenter(Triangle t) {
   double x,y;
-  circumCircleCenter(
-		     getPoint(t.a)->getX(), getPoint(t.a)->getY(),
+  circumCircleCenter(getPoint(t.a)->getX(), getPoint(t.a)->getY(),
 		     getPoint(t.b)->getX(), getPoint(t.b)->getY(),
 		     getPoint(t.c)->getX(), getPoint(t.c)->getY(),
 		     x, y);
@@ -340,6 +346,7 @@ void matriceAdjacence(std::vector<Triangle*> triangles) {
 
 void delaunay(vector<Triangle*> triangles) {
   cout << "Nous allons traiter " << triangles.size() << " triangles" << endl;
+  std::map<std::vector<Triangle*>, int> m;
   bool flipped = true;
   int cpt = 0;
   while (flipped) {
@@ -347,9 +354,18 @@ void delaunay(vector<Triangle*> triangles) {
     std::cout << cpt++ << std::endl;
     for (auto i : triangles) {
       for (auto j : i->voisins) {
-	if(flipPossible(*i, *j)) {
+	std::vector<Triangle*> key;
+	key.push_back(i);
+	key.push_back(j);
+	if(flipPossible(*i, *j) && m.count(key) == 0) {
+	  m.insert(std::pair<std::vector<Triangle*>, int>(key, 1));
 	  flip(i, j, triangles);
 	  flipped = true;
+	  glClear(GL_COLOR_BUFFER_BIT);
+	  for (Triangle* v : triangles) {
+	    v->afficher();
+	  }
+	  glFlush();
 	  break;
 	}
       }
@@ -381,62 +397,45 @@ void tp3() {
 
 void alphaComplexe(float alpha, std::vector<Triangle*> triangles) {
   for (Triangle* v : triangles) {
-    //v->afficher();
-  }
-
-  //*
-  delaunay(triangles);
-  cout << "Delaunay OK" << endl;
-
-  cout << "Calcul des rayon" << endl;
-  for (Triangle* v : triangles) {
     float rayon = getRayon(*v);
     if (rayon < alpha) {
       v->afficher();
     }
   }
-  //*/
-
 }
 
 bool ok = false;
 
-bool vectorContainsPoint(std::vector<Point*> v, Point* p) {
-  for (auto i : v) {
-    if(i->equals(p)) {
-      return true;
-    }
-  }
-  return false;
-}
+vector<Triangle*> triangles;
 
-void exec() {
-  if (ok)
+void exec(int alpha) {
+  if (ok) {
+    alphaComplexe(alpha, triangles);
     return;
+  }
 
   //tp3();
   //*
   const int n = 800;
-  Point** sommet = sommets_800;
+  Point** sommet = sommets_801;
 
   points.clear();
 
   for (int i = 0; i < n; ++i) {
-    if(!vectorContainsPoint(points, sommet[i]))
+    if(isValid(sommet[i]))
       points.push_back(sommet[i]);
   }
   // generer(n);
   std::cout << points.size() << std::endl;
-  Point::displayAll(vectorToTab(points), points.size(), false);
+  // Point::displayAll(vectorToTab(points), points.size(), false);
   std::cout << "generation ok" << std::endl;
   trierWithAbssice();
   cout << "tri ok" << endl;
-  vector<Triangle*> triangles = triangulation();
+  triangles = triangulation();
   cout << "Triangles OK" << endl;
 
   matriceAdjacence(triangles);
-  
-  alphaComplexe(5000, triangles);
+  delaunay(triangles);
 
   //*/
   ok = true;

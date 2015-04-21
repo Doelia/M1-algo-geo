@@ -32,12 +32,16 @@ Si vous mettez glut dans le répertoire courant, on aura alors #include "glut.h"
 #define RED   0.15
 #define GREEN 0.15
 #define BLUE  0.15
+
 #define ALPHA 1
+
+int alpha = 20;
 
 
 // Touche echap (Esc) permet de sortir du programme
 #define KEY_ESC 27
-
+#define PLUS 43
+#define MINUS 45
 
 // Entêtes de fonctions
 void init_scene();
@@ -88,7 +92,7 @@ GLvoid _initGL()
 void init_scene()
 {
   //srand(time(NULL));
- srand(9);
+srand(time(NULL));
    glPointSize(10);
 }
 
@@ -133,6 +137,13 @@ GLvoid window_key(unsigned char key, int x, int y)
   case KEY_ESC:  
     exit(1);                    
     break; 
+  case PLUS:
+    alpha++;
+    break;
+
+  case MINUS:
+    alpha--;
+    break;
   }     
 
   render_scene();
@@ -145,7 +156,7 @@ GLvoid window_key(unsigned char key, int x, int y)
 void render_scene()
 {
   glClear(GL_COLOR_BUFFER_BIT);
-  exec();
+  exec(alpha);
   glFlush();
 
 }
