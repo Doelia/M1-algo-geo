@@ -43,6 +43,8 @@ public:
 	int b;
 	int c;
 
+	vector<Triangle> voisins;
+
 	Triangle() {
 
 	}
@@ -76,6 +78,7 @@ public:
 };
 
 vector<Triangle*> triangulation() {
+
 	vector<Triangle*> T;
 	Triangle* first = new Triangle();
 	first->a = 0;
@@ -208,12 +211,12 @@ void flip(Triangle* t1, Triangle* t2) {
 
 void circumCircleCenter(double x1, double y1, double x2, double y2, double x3, double y3, double &x, double &y)
 {
-  double v,m1, m2, m3, n1, n2, n3;
-  m1 = 2.*(x3-x2); m2 = -2.*(y2-y3); m3 = (y2-y3)*(y2+y3)-(x3-x2)*(x2+x3);
-  n1 = 2.*(x3-x1); n2 = -2.*(y1-y3); n3 = (y1-y3)*(y1+y3)-(x3-x1)*(x1+x3);
-  v=1./(n2*m1-n1*m2);
-  x = v*(n3*m2-n2*m3);
-  y = v*(n1*m3-n3*m1);
+	double v,m1, m2, m3, n1, n2, n3;
+	m1 = 2.*(x3-x2); m2 = -2.*(y2-y3); m3 = (y2-y3)*(y2+y3)-(x3-x2)*(x2+x3);
+	n1 = 2.*(x3-x1); n2 = -2.*(y1-y3); n3 = (y1-y3)*(y1+y3)-(x3-x1)*(x1+x3);
+	v=1./(n2*m1-n1*m2);
+	x = v*(n3*m2-n2*m3);
+	y = v*(n1*m3-n3*m1);
 }
 
 Point getCenter(Triangle t) {
@@ -286,7 +289,7 @@ void delaunay(vector<Triangle*> triangles) {
 }
 
 void tp3() {
-	int n = 200;
+	int n = 300;
 	generer(n);
 	trierWithAbssice();
 	Point::displayAll(vectorToTab(points), n, false);
@@ -303,7 +306,7 @@ void tp3() {
 	delaunay(triangles);
 
 	for (Triangle* v : triangles) {
-		//v->afficher();
+		v->afficher();
 	}
 }
 
@@ -338,7 +341,8 @@ void exec() {
 	if (ok)
 		return;
 
-	//tp3();
+	tp3();
+	return;
 	//*
 	const int n = 800;
 	Point** sommet = sommets_801;
@@ -350,7 +354,7 @@ void exec() {
 	}
 	Point::displayAll(vectorToTab(points), n, false);
 
-	alphaComplexe(5000);
+	alphaComplexe(40);
 	//*/
 	ok = true;
 }
