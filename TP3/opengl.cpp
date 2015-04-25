@@ -36,7 +36,10 @@ Si vous mettez glut dans le répertoire courant, on aura alors #include "glut.h"
 #define ALPHA 1
 
 int alpha = 20;
+<<<<<<< HEAD
 bool ashape = false;
+=======
+>>>>>>> noe
 
 
 // Touche echap (Esc) permet de sortir du programme
@@ -145,12 +148,17 @@ GLvoid window_key(unsigned char key, int x, int y)
   case MINUS:
     alpha--;
     break;
+<<<<<<< HEAD
      
   case 13:
     ashape = !ashape;
     break;
   }
   std::cout << "alpha = " << alpha << std::endl;
+=======
+  }     
+
+>>>>>>> noe
   render_scene();
 }
 
@@ -161,7 +169,11 @@ GLvoid window_key(unsigned char key, int x, int y)
 void render_scene()
 {
   glClear(GL_COLOR_BUFFER_BIT);
+<<<<<<< HEAD
   exec(alpha, ashape);
+=======
+  exec(alpha);
+>>>>>>> noe
   glFlush();
 
 }

@@ -442,7 +442,6 @@ void tp3() {
   glColor4f(0,1,0,0.5f);
   // delaunay(triangles);
 
-
   for (Triangle* v : triangles) {
     //v->afficher();
   }
@@ -454,6 +453,7 @@ int getNbVoisinsForAlphaShape(Triangle* t) {
     n += i->inAlphaShape;
   }
   return n;
+
 }
 
 void alphaComplexe(float alpha, std::vector<Triangle*> triangles) {
@@ -464,7 +464,6 @@ void alphaComplexe(float alpha, std::vector<Triangle*> triangles) {
     }
   }
 }
-
 
 
 void alphaShape(float alpha, std::vector<Triangle*> triangles) {
@@ -492,19 +491,19 @@ bool ok = false;
 
 vector<Triangle*> triangles;
 
-void exec(int alpha, bool ashape) {
+
+void exec(int alpha) {
   if (ok) {
-    if(ashape) 
-      alphaShape(alpha, triangles);
-    else
-      alphaComplexe(alpha, triangles);
+    // alphaComplexe(alpha, triangles);
+    alphaShape(alpha, triangles);
     return;
   }
 
   //tp3();
   //*
   const int n = 800;
-  Point** sommet = sommets_800;
+
+  Point** sommet = sommets_801;
 
   points.clear();
 
