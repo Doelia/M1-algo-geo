@@ -505,7 +505,7 @@ void exec(int alpha, bool ashape) {
   //*
   const int n = 800;
 
-  Point** sommet = sommets_800;
+  Point** sommet = sommets_801;
 
   points.clear();
 

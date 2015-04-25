@@ -147,7 +147,7 @@ GLvoid window_key(unsigned char key, int x, int y)
     alpha--;
     break;
 
-  case 13:
+  case 'a':
     ashape = !ashape;
     break;
   }
