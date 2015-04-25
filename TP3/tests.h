@@ -184,5 +184,4 @@ new Point(472,182,0),new Point(194,610,0),new Point(468,438,0),new Point(242,426
 new Point(428,696,0),new Point(176,554,0),new Point(370,716,0),new Point(412,108,0),new Point(324,330,0),new Point(442,676,0),new Point(204,550,0),new Point(426,742,0),new Point(308,704,0),new Point(238,434,0),
 new Point(206,226,0),new Point(390,702,0),new Point(584,474,0),new Point(484,726,0),new Point(496,358,0),new Point(320,650,0),new Point(210,248,0),new Point(554,498,0),new Point(312,728,0),new Point(462,634,0),
 new Point(456,598,0),new Point(314,706,0),new Point(220,194,0),new Point(228,226,0),new Point(340,436,0),new Point(224,556,0),new Point(236,526,0),new Point(542,500,0),new Point(358,686,0),new Point(238,422,0),
-new Point(216,386,0),new Point(394,654,0),new Point(390,270,0),new Point(170,562,0),new Point(452,464,0),new Point(340,670,0),new Point(166,602,0),new Point(326,142,0),new Point(520,498,0),new Point(258,188,0),
-};
+new Point(216,386,0),new Point(394,654,0),new Point(390,270,0),new Point(170,562,0),new Point(452,464,0),new Point(340,670,0),new Point(166,602,0),new Point(326,142,0),new Point(520,498,0),new Point(258,188,0)};
