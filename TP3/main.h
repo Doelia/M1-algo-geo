@@ -492,10 +492,12 @@ bool ok = false;
 vector<Triangle*> triangles;
 
 
-void exec(int alpha) {
+void exec(int alpha, bool ashape) {
   if (ok) {
-    // alphaComplexe(alpha, triangles);
-    alphaShape(alpha, triangles);
+    if(ashape) 
+      alphaShape(alpha, triangles);
+    else
+      alphaComplexe(alpha, triangles);
     return;
   }
 
@@ -503,7 +505,7 @@ void exec(int alpha) {
   //*
   const int n = 800;
 
-  Point** sommet = sommets_801;
+  Point** sommet = sommets_800;
 
   points.clear();
 
