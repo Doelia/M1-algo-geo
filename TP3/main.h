@@ -42,6 +42,7 @@ class Triangle {
   int b;
   int c;
   std::vector<Triangle*> voisins;
+  bool inAlphaShape;
 
   Triangle() {
 
@@ -53,12 +54,46 @@ class Triangle {
     this->c = c;
   }
 
+  std::vector<int> getPoints() {
+    std::vector<int> pts;
+    pts.push_back(a);
+    pts.push_back(b);
+    pts.push_back(c);
+    return pts;
+  }
+
   void afficher() {
     glBegin(GL_LINE_STRIP);
     getPoint(a)->draw();
     getPoint(b)->draw();
     getPoint(c)->draw();
     getPoint(a)->draw();
+    glEnd();
+  }
+
+  void afficherInAlphaShape() {
+    int a = 1;
+    int b = 1;
+    int c = 1;
+
+    for (auto i : this->voisins) {
+      if(i->inAlphaShape) {
+      for (auto j : i->getPoints()) {
+	  a += j == this->a;
+	  b += j == this->b;
+	  c += j == this->c;
+	}
+      }
+    }
+
+    glBegin(GL_LINE_STRIP);
+    if(a == 2) getPoint(this->a)->draw();
+    if(b == 2) getPoint(this->b)->draw();
+    if(c == 2) getPoint(this->c)->draw();
+
+    // if(a < 3) getPoint(this->a)->draw();
+    // if(b < 3) getPoint(this->b)->draw();
+    // if(c < 3) getPoint(this->c)->draw();
     glEnd();
   }
 
@@ -206,6 +241,16 @@ std::vector<Triangle*> getVoisinsForTriangle(Triangle* t, std::vector<Triangle*>
   return voisins;
 }
 
+void removeDuplicatesVoisins(Triangle* t) {
+  std::vector<Triangle*> vec;
+  for (auto i : t->voisins) {
+    if(!vectorContains(vec, i) && !vectorContains(vec, t)) {
+      vec.push_back(i);
+    }
+  }
+  t->voisins = vec;
+}
+
 std::vector<Triangle*> removeTriangle(std::vector<Triangle*> triangles, Triangle* t) {
   std::vector<Triangle*> var;
   for (auto i : triangles) {
@@ -278,6 +323,10 @@ void flip(Triangle* t1, Triangle* t2, std::vector<Triangle*> var) {
     for (auto j : t) {
       i->voisins.push_back(j);
     }
+  }
+
+  for (auto i : triangles) {
+    removeDuplicatesVoisins(i);
   }
 }
 
@@ -395,6 +444,14 @@ void tp3() {
   }
 }
 
+int getNbVoisinsForAlphaShape(Triangle* t) {
+  int n = 0;
+  for (auto i : t->voisins) {
+    n += i->inAlphaShape;
+  }
+  return n;
+}
+
 void alphaComplexe(float alpha, std::vector<Triangle*> triangles) {
   for (Triangle* v : triangles) {
     float rayon = getRayon(*v);
@@ -404,13 +461,36 @@ void alphaComplexe(float alpha, std::vector<Triangle*> triangles) {
   }
 }
 
+
+void alphaShape(float alpha, std::vector<Triangle*> triangles) {
+  std::vector<Triangle*> t;
+  for (Triangle* v : triangles) {
+    float rayon = getRayon(*v);
+    // std::cout << v->voisins.size() << std::endl;
+    if(rayon < alpha) {
+      t.push_back(v);
+      v->inAlphaShape = true;
+    } else {
+      v->inAlphaShape = false;
+    }
+  }
+
+  for (auto i : t) {
+    if(getNbVoisinsForAlphaShape(i) < 3) {
+      i->afficherInAlphaShape();
+    }
+  }
+}
+
+
 bool ok = false;
 
 vector<Triangle*> triangles;
 
 void exec(int alpha) {
   if (ok) {
-    alphaComplexe(alpha, triangles);
+    // alphaComplexe(alpha, triangles);
+    alphaShape(alpha, triangles);
     return;
   }
 
