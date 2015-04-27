@@ -403,11 +403,11 @@ void delaunay(vector<Triangle*> triangles) {
   int cpt = 0;
 
   while (flipped) {
-   glClear(GL_COLOR_BUFFER_BIT);
+  /* glClear(GL_COLOR_BUFFER_BIT);
    for (Triangle* v : triangles) {
      v->afficher();
    }
-   glFlush();
+   glFlush();*/
    
    flipped = false;
    std::cout << cpt++ << std::endl;
@@ -481,13 +481,16 @@ void tp3() {
 
   if (ok == 0) {
     cout << "Génération..." << endl;
-    int n = 200;
+    int n = 1000;
     generer(n);
     trierWithAbssice();
-    Point::displayAll(vectorToTab(points), n, false);
+    //Point::displayAll(vectorToTab(points), n, false);
     triangles = triangulation();
-    base = triangulation();
-    ok++;
+    matriceAdjacence(triangles);
+    delaunay(triangles);
+     for (Triangle* v : triangles) {
+      v->afficher();
+    }
     return;
   }
 
@@ -524,7 +527,7 @@ void tp4(int alpha, bool ashape) {
 
   //*
 
-  const int n = 800;
+  const int n = 2000;
 
   Point** sommet = sommets_801;
 
@@ -555,8 +558,8 @@ void tp4(int alpha, bool ashape) {
 
 void exec(int alpha, bool ashape) {
 
-  //tp3();
-  tp4(alpha, ashape);
+  tp3();
+  //tp4(alpha, ashape);
 
 }
 
