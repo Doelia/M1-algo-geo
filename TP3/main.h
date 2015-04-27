@@ -487,7 +487,7 @@ void tp3() {
     //Point::displayAll(vectorToTab(points), n, false);
     triangles = triangulation();
     matriceAdjacence(triangles);
-    delaunay(triangles);
+    //delaunay(triangles);
      for (Triangle* v : triangles) {
       v->afficher();
     }
@@ -527,7 +527,7 @@ void tp4(int alpha, bool ashape) {
 
   //*
 
-  const int n = 2000;
+  const int n = 800;
 
   Point** sommet = sommets_801;
 
@@ -558,8 +558,8 @@ void tp4(int alpha, bool ashape) {
 
 void exec(int alpha, bool ashape) {
 
-  tp3();
-  //tp4(alpha, ashape);
+  //tp3();
+  tp4(alpha, ashape);
 
 }
 
