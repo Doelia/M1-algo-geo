@@ -12,6 +12,7 @@
 
 
 vector<Point*> points;
+int nbrFlips = 0;
 
 bool isValid(Point* p) {
   for (auto i : points) {
@@ -70,6 +71,10 @@ public:
     getPoint(c)->draw();
     getPoint(a)->draw();
     glEnd();
+  }
+
+  void afficherIndices() {
+    cout << a << ", " << b << ", " << c << endl;
   }
 
   void afficherInAlphaShape() {
@@ -411,9 +416,9 @@ void delaunay(vector<Triangle*> triangles) {
    
    flipped = false;
    std::cout << cpt++ << std::endl;
-   for (auto i : triangles) {
+   for (Triangle* i : triangles) {
 
-    for (auto j : i->voisins) {
+    for (Triangle* j : i->voisins) {
      std::vector<Triangle*> key;
      key.push_back(i);
      key.push_back(j);
@@ -421,7 +426,10 @@ void delaunay(vector<Triangle*> triangles) {
        m.insert(std::pair<std::vector<Triangle*>, int>(key, 1));
        flip(i, j, triangles);
        flipped = true;
-
+       nbrFlips++;
+       cout << "flip # " << nbrFlips << " entre ";
+       i->afficherIndices();
+       j->afficherIndices();
        break;
      }
    }
@@ -528,6 +536,83 @@ void loadTest() {
 
 }
 
+void loadTest3() {
+  int n = 32;
+  pointTest sommet[n];
+
+sommet[0].abscisse=100;
+sommet[0].ordonnee=100;
+sommet[1].abscisse=100;
+sommet[1].ordonnee=500;
+sommet[2].abscisse=120;
+sommet[2].ordonnee=300;
+sommet[3].abscisse=140;
+sommet[3].ordonnee=100;
+sommet[4].abscisse=140;
+sommet[4].ordonnee=500;
+sommet[5].abscisse=160;
+sommet[5].ordonnee=300;
+sommet[6].abscisse=180;
+sommet[6].ordonnee=100;
+sommet[7].abscisse=180;
+sommet[7].ordonnee=500;
+sommet[8].abscisse=200;
+sommet[8].ordonnee=300;
+sommet[9].abscisse=220;
+sommet[9].ordonnee=100;
+sommet[10].abscisse=220;
+sommet[10].ordonnee=500;
+sommet[11].abscisse=240;
+sommet[11].ordonnee=300;
+sommet[12].abscisse=260;
+sommet[12].ordonnee=100;
+sommet[13].abscisse=260;
+sommet[13].ordonnee=500;
+sommet[14].abscisse=280;
+sommet[14].ordonnee=300;
+sommet[15].abscisse=300;
+sommet[15].ordonnee=100;
+sommet[16].abscisse=300;
+sommet[16].ordonnee=500;
+sommet[17].abscisse=320;
+sommet[17].ordonnee=300;
+sommet[18].abscisse=340;
+sommet[18].ordonnee=100;
+sommet[19].abscisse=340;
+sommet[19].ordonnee=500;
+sommet[20].abscisse=360;
+sommet[20].ordonnee=300;
+sommet[21].abscisse=380;
+sommet[21].ordonnee=100;
+sommet[22].abscisse=380;
+sommet[22].ordonnee=500;
+sommet[23].abscisse=400;
+sommet[23].ordonnee=300;
+sommet[24].abscisse=420;
+sommet[24].ordonnee=100;
+sommet[25].abscisse=420;
+sommet[25].ordonnee=500;
+sommet[26].abscisse=440;
+sommet[26].ordonnee=300;
+sommet[27].abscisse=460;
+sommet[27].ordonnee=100;
+sommet[28].abscisse=460;
+sommet[28].ordonnee=500;
+sommet[29].abscisse=480;
+sommet[29].ordonnee=300;
+sommet[30].abscisse=500;
+sommet[30].ordonnee=100;
+sommet[31].abscisse=500;
+sommet[31].ordonnee=500;
+
+
+  for (int i = 0; i < n; i++) {
+    points.push_back(new Point(sommet[i].abscisse, sommet[i].ordonnee, 0));
+  }
+
+
+}
+
 
 
 int ok = 0;
@@ -566,9 +651,75 @@ void tp3() {
 }
 
 void ex4() {
-  
+     glColor4f(0,1,0,0.5f);
+
+  if (ok == 0) {
+    cout << "Génération..." << endl;
+    int n = 32;
+    loadTest3();
+    trierWithAbssice();
+    Point::displayAll(vectorToTab(points), n, false);
+    triangles = triangulation();
+    base = triangulation();
+    ok++;
+    return;
+  }
+
+  if (ok % 2 == 0) {
+     for (Triangle* v : base) {
+      v->afficher();
+    }
+    triangles = base;
+  } else {
+    matriceAdjacence(triangles);
+    delaunay(triangles);
+  }
+
+  ok++;
+
 }
 
+
+/**
+
+20 => 23 (1x)
+100 => 294 flips (3x)
+200 => 725 flips (4x)
+300 => 1250 (4x)
+400 => 1800 (4.5x)
+600 => 2900 (4.8x)
+800 => 4200 (5.25x)
+
+**/
+
+void ex5() {
+   glColor4f(0,1,0,0.5f);
+
+  if (ok == 0) {
+    cout << "Génération..." << endl;
+    int n = 800;
+
+    generer(n);
+    trierWithAbssice();
+    Point::displayAll(vectorToTab(points), n, false);
+    triangles = triangulation();
+    base = triangulation();
+    ok++;
+    return;
+  }
+
+  if (ok % 2 == 0) {
+     for (Triangle* v : base) {
+      v->afficher();
+    }
+    triangles = base;
+  } else {
+    matriceAdjacence(triangles);
+    delaunay(triangles);
+  }
+
+  ok++;
+}
 
 void tp4(int alpha, bool ashape) {
 
@@ -577,7 +728,7 @@ void tp4(int alpha, bool ashape) {
     return;
   }
 
-  if (ok >=2 ) {
+  if (ok >= 2) {
     if(ashape) 
       alphaShape(alpha, triangles);
     else
@@ -613,12 +764,63 @@ void tp4(int alpha, bool ashape) {
   ok++;
 }
 
+void ex6(int alpha, int ashape) {
+  if (ok == 0) {
+    ok++;
+    return;
+  }
 
+  if (ok >= 2) {
+    if(ashape) 
+      alphaShape(alpha, triangles);
+    else
+      alphaComplexe(alpha, triangles);
+    return;
+  }
+
+  //*
+
+  const int n = 500;
+
+  Point** sommet = new Point*[n];
+
+  for (int iBaba = 0; iBaba < n; ++iBaba)  {
+    sommet[iBaba] = new Point(baba[iBaba].a, baba[iBaba].b, 0);
+  }
+
+
+  points.clear();
+
+  for (int i = 0; i < n; ++i) {
+    if(isValid(sommet[i]))
+      points.push_back(sommet[i]);
+  }
+  // generer(n);
+  std::cout << points.size() << std::endl;
+  // Point::displayAll(vectorToTab(points), points.size(), false);
+  std::cout << "generation ok" << std::endl;
+  trierWithAbssice();
+  cout << "tri ok" << endl;
+  triangles = triangulation();
+  cout << "Triangles OK" << endl;
+
+  matriceAdjacence(triangles);
+  delaunay(triangles);
+
+  //*/
+  ok++;
+}
 
 
 void exec(int alpha, bool ashape) {
 
-  tp3();
+  nbrFlips = 0;
+
+
+  //tp3();
+  //ex4();
+  //ex5();
+  ex6(alpha, ashape);
   //tp4(alpha, ashape);
 
 }
