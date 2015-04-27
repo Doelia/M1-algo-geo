@@ -3,6 +3,25 @@
 
 Segment** rdm;
 
+void loadTest() {
+
+	int n = 10;
+	int i = 0;
+	rdm = new Segment*[n];
+
+	rdm[i++] = new Segment(new Point(202,203,0), new Point(351,223,0));
+	rdm[i++] = new Segment(new Point(52,616,0), new Point(235,647,0));
+	rdm[i++] = new Segment(new Point(250,100,0), new Point(381,246,0));
+	rdm[i++] = new Segment(new Point(332,124,0), new Point(453,77,0));
+	rdm[i++] = new Segment(new Point(318,613,0), new Point(485,649,0));
+	rdm[i++] = new Segment(new Point(206,146,0), new Point(258,159,0));
+	rdm[i++] = new Segment(new Point(24,287,0), new Point(221,331,0));
+	rdm[i++] = new Segment(new Point(26,267,0), new Point(115,288,0));
+	rdm[i++] = new Segment(new Point(75,114,0), new Point(174,130,0));
+	rdm[i++] = new Segment(new Point(246,242,0), new Point(510,225,0));
+
+}
+
 Segment** generatePointRandom(int n) {
 	Segment** tab = new Segment*[n];
 
@@ -63,6 +82,7 @@ bool intersectionParBalayage(Segment* segments[], int n) {
 			Segment* segAuDessous = (auDessous != -1) ? rdm[auDessous] : NULL;
 
 			if (segAuDessus != NULL && intersect(segCourant, segAuDessus)) {
+				cout << "Intersection entre " << segCourant->x << " et " << segAuDessus->x << endl;
 				return true;
 			} else {
 				/*cout << "Il n'y a pas d'intersection entre " 
@@ -72,6 +92,7 @@ bool intersectionParBalayage(Segment* segments[], int n) {
 			}
 			
 			if (segAuDessous != NULL && intersect(segCourant, segAuDessous)) {
+				cout << "Intersection entre " << segCourant->x << " et " << segAuDessous->x << endl;
 				return true;
 			} else {
 				/*
@@ -85,6 +106,7 @@ bool intersectionParBalayage(Segment* segments[], int n) {
 			Segment* segAuDessous = (auDessous != -1) ? rdm[auDessous] : NULL;
 
 			if (segAuDessus != NULL && segAuDessous != NULL && intersect(segAuDessus, segAuDessous)) {
+				cout << "Intersection entre " << *(segAuDessus->x) << " et " << *(segAuDessous->x) << endl;
 				return true;
 			}
 			T.Supprime(indicePoint/2);
@@ -95,30 +117,11 @@ bool intersectionParBalayage(Segment* segments[], int n) {
 
 
 void exec() {
-	int coef = 100;
-	Segment* s1 = new Segment(new Point(1*coef,1*coef,0), new Point(3*coef,3*coef,0));
-	Segment* s2 = new Segment(new Point(2*coef,0*coef,0), new Point(2*coef,0*coef,0));
+	int n = 10;
+	//rdm = generatePointRandom(n);
+	loadTest();
 
-	int n = 20;
-	rdm = generatePointRandom(n);
-	//rdm[45] = s1;
-	//rdm[46] = s2;
-	
 	Segment::displayAll(rdm, n);
 	cout << (intersectionParBalayage(rdm, n) ? "OUI" : "NON") << endl;
-
-	/*
-
-	int coef = 100;
-
-	Segment* s1 = new Segment(new Point(1*coef,1*coef,0), new Point(3*coef,3*coef,0));
-	Segment* s2 = new Segment(new Point(2*coef,1*coef,0), new Point(2*coef,0*coef,0));
-	Segment::displayAll(&s1, 1);
-	Segment::displayAll(&s2, 1);
-	cout << intersect(s1, s2) << endl;
-
-	*/
-
-	
 
 }

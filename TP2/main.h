@@ -1,5 +1,5 @@
-#ifndef TP1_H
-#define TP1_H
+#ifndef TP2_H
+#define TP2_H
 
 #include "Segment.h"
 #include "Point.h"
@@ -140,7 +140,7 @@ vector<Point*> graham(Point** tab, int n) {
 
 
 void exec() {
-	int n = 10;
+	int n = 20;
 	Point** pts = generatePointRandomInCircle(n);
 
 	glColor3f(1, 0, 1);
