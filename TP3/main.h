@@ -38,7 +38,7 @@ Point* getPoint(int indice) {
 
 class Triangle {
 
- public:
+public:
   int a;
   int b;
   int c;
@@ -79,46 +79,46 @@ class Triangle {
 
     for (auto i : this->voisins) {
       if(i->inAlphaShape) {
-      for (auto j : i->getPoints()) {
-	  a += j == this->a;
-	  b += j == this->b;
-	  c += j == this->c;
-	}
-      }
-    }
+        for (auto j : i->getPoints()) {
+         a += j == this->a;
+         b += j == this->b;
+         c += j == this->c;
+       }
+     }
+   }
 
-    glBegin(GL_LINE_STRIP);
-    if(a == 2) getPoint(this->a)->draw();
-    if(b == 2) getPoint(this->b)->draw();
-    if(c == 2) getPoint(this->c)->draw();
+   glBegin(GL_LINE_STRIP);
+   if(a == 2) getPoint(this->a)->draw();
+   if(b == 2) getPoint(this->b)->draw();
+   if(c == 2) getPoint(this->c)->draw();
 
     // if(a < 3) getPoint(this->a)->draw();
     // if(b < 3) getPoint(this->b)->draw();
     // if(c < 3) getPoint(this->c)->draw();
-    glEnd();
-  }
+   glEnd();
+ }
 
-  vector<int> getSommets() {
-    vector<int> v;
-    v.push_back(a);
-    v.push_back(b);
-    v.push_back(c);
-    return v;
-  }
+ vector<int> getSommets() {
+  vector<int> v;
+  v.push_back(a);
+  v.push_back(b);
+  v.push_back(c);
+  return v;
+}
 
-  bool equals(Triangle* t) {
-    int cpt = 0;
-    for (auto i : this->getSommets()) {
-      for (auto j : t->getSommets()) {
-	cpt += (i == j);
-      }
-    }
-    return cpt == 3;
-  }
+bool equals(Triangle* t) {
+  int cpt = 0;
+  for (auto i : this->getSommets()) {
+    for (auto j : t->getSommets()) {
+     cpt += (i == j);
+   }
+ }
+ return cpt == 3;
+}
 
-  void displayCoords() {
-    cout << "Triangle: " << a << ", " << b << ", " << c << "." << endl;
-  }
+void displayCoords() {
+  cout << "Triangle: " << a << ", " << b << ", " << c << "." << endl;
+}
 };
 
 vector<Triangle*> triangulation() {
@@ -152,56 +152,56 @@ vector<Triangle*> triangulation() {
       continue;
       }*/
 
-    int j = 0;
-    while (true) {
-      Vector a(points[i+1], points[EC[j]]);
-      Vector b(points[i+1], points[EC[j+1]]);
-      if (a.getDeter(&b) <= 0) {
-	Triangle* nouv = new Triangle();
-	nouv->a = EC[j];
-	nouv->b = EC[j+1];
-	nouv->c = i+1;
-	T.push_back(nouv);
-	j++;
-      }
-      else {
-	break;
-      }
-    }
-    int kDroite = j;
+      int j = 0;
+      while (true) {
+        Vector a(points[i+1], points[EC[j]]);
+        Vector b(points[i+1], points[EC[j+1]]);
+        if (a.getDeter(&b) <= 0) {
+         Triangle* nouv = new Triangle();
+         nouv->a = EC[j];
+         nouv->b = EC[j+1];
+         nouv->c = i+1;
+         T.push_back(nouv);
+         j++;
+       }
+       else {
+         break;
+       }
+     }
+     int kDroite = j;
 
 
-    j = EC.size()-1;
-    while (true) {
+     j = EC.size()-1;
+     while (true) {
       Vector a(points[i+1], points[EC[j]]);
       Vector b(points[i+1], points[EC[j-1]]);
       if (a.getDeter(&b) >= 0) {
-	Triangle* nouv = new Triangle();
-	nouv->a = EC[j];
-	nouv->b = EC[j-1];
-	nouv->c = i+1;
-	T.push_back(nouv);
-	j--;
-      }
-      else {
-	break;
-      }
-    }
-    int kGauche = j;
+       Triangle* nouv = new Triangle();
+       nouv->a = EC[j];
+       nouv->b = EC[j-1];
+       nouv->c = i+1;
+       T.push_back(nouv);
+       j--;
+     }
+     else {
+       break;
+     }
+   }
+   int kGauche = j;
 
-    vector<int> copy;
-    copy.push_back(i+1);
-    for (int i = kDroite; i < kGauche+1; ++i) {
-      copy.push_back(EC[i]);
-    }
-    copy.push_back(i+1);
-    EC = copy;
-		
+   vector<int> copy;
+   copy.push_back(i+1);
+   for (int i = kDroite; i < kGauche+1; ++i) {
+    copy.push_back(EC[i]);
   }
+  copy.push_back(i+1);
+  EC = copy;
+  
+}
 
-  cout << "ALGO OK" << endl;
+cout << "ALGO OK" << endl;
 
-  return T;
+return T;
 
 }
 
@@ -215,10 +215,10 @@ Point** vectorToTab(vector<Point*> pts) {
 
 void trierWithAbssice() {
   std::sort(points.begin(), points.end(), [=] (Point* a, Point* b) {
-      if(a->getX() == b->getX())
-	return a->getY() < b->getY();
-      return a->getX() < b->getX();
-    });
+    if(a->getX() == b->getX())
+     return a->getY() < b->getY();
+   return a->getX() < b->getX();
+ });
 }
 
 bool vectorContains(std::vector<Triangle*> triangles, Triangle* t) {
@@ -296,40 +296,40 @@ void flip(Triangle* t1, Triangle* t2, std::vector<Triangle*> var) {
   for (auto i : t1->getSommets()) {
     for (auto j : t2->getSommets()) {
       if (i == j) {
-	flip.push_back(i);
-      }	
-    }
-  }
+       flip.push_back(i);
+     }	
+   }
+ }
 
-  for (auto i : t1->getSommets()) {
-    if (find(flip.begin(), flip.end(), i) == flip.end()) {
-      flop.push_back(i);
-    }
+ for (auto i : t1->getSommets()) {
+  if (find(flip.begin(), flip.end(), i) == flip.end()) {
+    flop.push_back(i);
   }
-  for (auto i : t2->getSommets()) {
-    if (find(flip.begin(), flip.end(), i) == flip.end()) {
-      flop.push_back(i);
-    }
+}
+for (auto i : t2->getSommets()) {
+  if (find(flip.begin(), flip.end(), i) == flip.end()) {
+    flop.push_back(i);
   }
+}
 
-  t1->a = flip[0];
-  t1->b = flop[1];
-  t1->c = flop[0];
+t1->a = flip[0];
+t1->b = flop[1];
+t1->c = flop[0];
 
-  t2->a = flop[0];
-  t2->b = flip[1];
-  t2->c = flop[1];
+t2->a = flop[0];
+t2->b = flip[1];
+t2->c = flop[1];
 
-  for (auto i : triangles) {
-    std::vector<Triangle*> t =  getVoisinsForTriangle(i, (triangles.size() > 100)?var:triangles);
-    for (auto j : t) {
-      i->voisins.push_back(j);
-    }
+for (auto i : triangles) {
+  std::vector<Triangle*> t =  getVoisinsForTriangle(i, (triangles.size() > 100)?var:triangles);
+  for (auto j : t) {
+    i->voisins.push_back(j);
   }
+}
 
-  for (auto i : triangles) {
-    removeDuplicatesVoisins(i);
-  }
+for (auto i : triangles) {
+  removeDuplicatesVoisins(i);
+}
 }
 
 void circumCircleCenter(double x1, double y1, double x2, double y2, double x3, double y3, double &x, double &y)
@@ -345,9 +345,9 @@ void circumCircleCenter(double x1, double y1, double x2, double y2, double x3, d
 Point getCenter(Triangle t) {
   double x,y;
   circumCircleCenter(getPoint(t.a)->getX(), getPoint(t.a)->getY(),
-		     getPoint(t.b)->getX(), getPoint(t.b)->getY(),
-		     getPoint(t.c)->getX(), getPoint(t.c)->getY(),
-		     x, y);
+   getPoint(t.b)->getX(), getPoint(t.b)->getY(),
+   getPoint(t.c)->getX(), getPoint(t.c)->getY(),
+   x, y);
 
   Point p (x,y,0);
   return p;
@@ -361,7 +361,7 @@ double getRayon(Triangle t) {
 }
 
 bool flipPossible(Triangle t1, Triangle t2) {
-    vector<int> points = t2.getSommets();
+  vector<int> points = t2.getSommets();
   for (auto i : t1.getSommets()) {
     points.erase(remove(points.begin(), points.end(), i), points.end());
   }
@@ -379,9 +379,9 @@ bool flipPossible(Triangle t1, Triangle t2) {
   double x;
   double y;
   circumCircleCenter(getPoint(a)->getX(), getPoint(a)->getY(),
-		     getPoint(b)->getX(), getPoint(b)->getY(),
-		     getPoint(c)->getX(), getPoint(c)->getY(),
-		     x, y);
+   getPoint(b)->getX(), getPoint(b)->getY(),
+   getPoint(c)->getX(), getPoint(c)->getY(),
+   x, y);
   Point center;
   center = getCenter(Triangle(a,b,c));
   Vector v(&center, getPoint(a));
@@ -390,6 +390,7 @@ bool flipPossible(Triangle t1, Triangle t2) {
 }
 
 void matriceAdjacence(std::vector<Triangle*> triangles) {
+  cout << "calcul matriceAdjacence " << endl;
   for (auto t : triangles) {
     t->voisins = getVoisinsForTriangle(t, triangles);
   }
@@ -400,52 +401,35 @@ void delaunay(vector<Triangle*> triangles) {
   std::map<std::vector<Triangle*>, int> m;
   bool flipped = true;
   int cpt = 0;
+
   while (flipped) {
-    flipped = false;
-    std::cout << cpt++ << std::endl;
-    for (auto i : triangles) {
-      for (auto j : i->voisins) {
-	std::vector<Triangle*> key;
-	key.push_back(i);
-	key.push_back(j);
-	if(flipPossible(*i, *j) && m.count(key) == 0) {
-	  m.insert(std::pair<std::vector<Triangle*>, int>(key, 1));
-	  flip(i, j, triangles);
-	  flipped = true;
-	  glClear(GL_COLOR_BUFFER_BIT);
-	  for (Triangle* v : triangles) {
-	    v->afficher();
-	  }
-	  glFlush();
-	  break;
-	}
-      }
-    }
-  }
+   glClear(GL_COLOR_BUFFER_BIT);
+   for (Triangle* v : triangles) {
+     v->afficher();
+   }
+   glFlush();
+   
+   flipped = false;
+   std::cout << cpt++ << std::endl;
+   for (auto i : triangles) {
+
+    for (auto j : i->voisins) {
+     std::vector<Triangle*> key;
+     key.push_back(i);
+     key.push_back(j);
+     if(flipPossible(*i, *j) && m.count(key) == 0) {
+       m.insert(std::pair<std::vector<Triangle*>, int>(key, 1));
+       flip(i, j, triangles);
+       flipped = true;
+
+       break;
+     }
+   }
+ }
 }
 
-void tp3() {
-
-  int n = 200;
-  generer(n);
-  trierWithAbssice();
-  Point::displayAll(vectorToTab(points), n, false);
-
-  vector<Triangle*> triangles = triangulation();
-
-  glColor4f(1,0,0,0.5f);
-
-  for (Triangle* v : triangles) {
-    v->afficher();
-  }
-
-  glColor4f(0,1,0,0.5f);
-  // delaunay(triangles);
-
-  for (Triangle* v : triangles) {
-    //v->afficher();
-  }
 }
+
 
 int getNbVoisinsForAlphaShape(Triangle* t) {
   int n = 0;
@@ -487,13 +471,50 @@ void alphaShape(float alpha, std::vector<Triangle*> triangles) {
 }
 
 
-bool ok = false;
-
+int ok = 0;
 vector<Triangle*> triangles;
+vector<Triangle*> base;
+
+void tp3() {
+
+   glColor4f(0,1,0,0.5f);
+
+  if (ok == 0) {
+    cout << "Génération..." << endl;
+    int n = 200;
+    generer(n);
+    trierWithAbssice();
+    Point::displayAll(vectorToTab(points), n, false);
+    triangles = triangulation();
+    base = triangulation();
+    ok++;
+    return;
+  }
+
+  if (ok % 2 == 0) {
+     for (Triangle* v : base) {
+      v->afficher();
+    }
+    triangles = base;
+  } else {
+    matriceAdjacence(triangles);
+    delaunay(triangles);
+  }
+
+  ok++;
+
+  
+}
 
 
-void exec(int alpha, bool ashape) {
-  if (ok) {
+void tp4(int alpha, bool ashape) {
+
+  if (ok == 0) {
+    ok++;
+    return;
+  }
+
+  if (ok >=2 ) {
     if(ashape) 
       alphaShape(alpha, triangles);
     else
@@ -501,8 +522,8 @@ void exec(int alpha, bool ashape) {
     return;
   }
 
-  //tp3();
   //*
+
   const int n = 800;
 
   Point** sommet = sommets_801;
@@ -526,7 +547,17 @@ void exec(int alpha, bool ashape) {
   delaunay(triangles);
 
   //*/
-  ok = true;
+  ok++;
+}
+
+
+
+
+void exec(int alpha, bool ashape) {
+
+  //tp3();
+  tp4(alpha, ashape);
+
 }
 
 #endif

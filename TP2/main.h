@@ -44,7 +44,7 @@ Point** generatePointRandomInCircle(int n) {
 bool anglePolaireInferieur(Point* p0, Point* p1, Point* p2) {
 	Vector p01(p0, p1);
 	Vector p02(p0, p2);
-	return p01.getDeter(&p02) <= 0;
+	return p01.getDeter(&p02) < 0;
 }
 
 Point* getPointOrdiMin(Point** list, int n) {
@@ -132,13 +132,15 @@ vector<Point*> graham(Point** tab, int n) {
 		list.push_back(l.top());
 		l.pop();
 	}
+
+	return list;
 	
 	return retournerPoints(tab, n);
 }
 
 
 void exec() {
-	int n = 100;
+	int n = 10;
 	Point** pts = generatePointRandomInCircle(n);
 
 	glColor3f(1, 0, 1);
