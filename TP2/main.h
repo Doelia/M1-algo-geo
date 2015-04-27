@@ -140,7 +140,7 @@ vector<Point*> graham(Point** tab, int n) {
 
 
 void exec() {
-	int n = 10;
+	int n = 1000;
 	Point** pts = generatePointRandomInCircle(n);
 
 	glColor3f(1, 0, 1);
