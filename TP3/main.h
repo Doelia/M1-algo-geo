@@ -619,7 +619,7 @@ int ok = 0;
 vector<Triangle*> triangles;
 vector<Triangle*> base;
 
-void tp3() {
+void ex3() {
 
    glColor4f(0,1,0,0.5f);
 
@@ -816,11 +816,10 @@ void exec(int alpha, bool ashape) {
 
   nbrFlips = 0;
 
-
-  //tp3();
-  //ex4();
+ // ex3();
+  ex4();
   //ex5();
-  ex6(alpha, ashape);
+  //ex6(alpha, ashape);
   //tp4(alpha, ashape);
 
 }
