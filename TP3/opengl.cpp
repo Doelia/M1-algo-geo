@@ -7,18 +7,18 @@
 // Base du TP 1
 // programme permettant de créer des formes de bases.
 // La forme représentée ici est un polygone blanc dessiné sur un fond rouge
-///////////////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>      
-#include <stdlib.h>     
+#include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "Vector.h"
 #include "Point.h"
 #include "main.h"
 
 /* Dans les salles de TP, vous avez généralement accès aux glut dans C:\Dev. Si ce n'est pas le cas, téléchargez les .h .lib ...
-Vous pouvez ensuite y faire référence en spécifiant le chemin dans visual. Vous utiliserez alors #include <glut.h>. 
-Si vous mettez glut dans le répertoire courant, on aura alors #include "glut.h" 
+Vous pouvez ensuite y faire référence en spécifiant le chemin dans visual. Vous utiliserez alors #include <glut.h>.
+Si vous mettez glut dans le répertoire courant, on aura alors #include "glut.h"
 */
 
 #include "GlutInclude.h"
@@ -50,11 +50,11 @@ void init_scene();
 void render_scene();
 GLvoid _initGL();
 GLvoid window_display();
-GLvoid window_reshape(GLsizei width, GLsizei height); 
-GLvoid window_key(unsigned char key, int x, int y); 
+GLvoid window_reshape(GLsizei width, GLsizei height);
+GLvoid window_key(unsigned char key, int x, int y);
 
-int main(int argc, char **argv) 
-{  
+int main(int argc, char **argv)
+{
   // initialisation  des paramètres de GLUT en fonction
   // des arguments sur la ligne de commande
   glutInit(&argc, argv);
@@ -66,10 +66,10 @@ int main(int argc, char **argv)
   glutCreateWindow("Premier exemple : carré");
 
   // initialisation de OpenGL et de la scène
-  _initGL();  
+  _initGL();
   init_scene();
 
-  // choix des procédures de callback pour 
+  // choix des procédures de callback pour
   // le tracé graphique
   glutDisplayFunc(&window_display);
   // le redimensionnement de la fenêtre
@@ -78,15 +78,15 @@ int main(int argc, char **argv)
   glutKeyboardFunc(&window_key);
 
   // la boucle prinicipale de gestion des événements utilisateur
-  glutMainLoop();  
+  glutMainLoop();
 
   return 1;
 }
 
 // initialisation du fond de la fenêtre graphique : noir opaque
-GLvoid _initGL() 
+GLvoid _initGL()
 {
-  glClearColor(RED, GREEN, BLUE, ALPHA);        
+  glClearColor(RED, GREEN, BLUE, ALPHA);
 }
 
 // Initialisation de la scene. Peut servir à stocker des variables de votre programme
@@ -106,7 +106,7 @@ GLvoid window_display()
   glLoadIdentity();
 
   // C'est l'endroit où l'on peut dessiner. On peut aussi faire appel
-  // à une fonction (render_scene() ici) qui contient les informations 
+  // à une fonction (render_scene() ici) qui contient les informations
   // que l'on veut dessiner
   render_scene();
 
@@ -117,28 +117,28 @@ GLvoid window_display()
 // fonction de call-back pour le redimensionnement de la fenêtre
 
 GLvoid window_reshape(GLsizei width, GLsizei height)
-{  
+{
   glViewport(0, 0, width, height);
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   // ici, vous verrez pendant le cours sur les projections qu'en modifiant les valeurs, il est
-  // possible de changer la taille de l'objet dans la fenêtre. Augmentez ces valeurs si l'objet est 
+  // possible de changer la taille de l'objet dans la fenêtre. Augmentez ces valeurs si l'objet est
   // de trop grosse taille par rapport à la fenêtre.
   glOrtho(0, width, 0, height, -1, 1);
 
-  // toutes les transformations suivantes s´appliquent au modèle de vue 
+  // toutes les transformations suivantes s´appliquent au modèle de vue
   glMatrixMode(GL_MODELVIEW);
 }
 
 // fonction de call-back pour la gestion des événements clavier
 
-GLvoid window_key(unsigned char key, int x, int y) 
-{  
-  switch (key) {    
-  case KEY_ESC:  
-    exit(1);                    
-    break; 
+GLvoid window_key(unsigned char key, int x, int y)
+{
+  switch (key) {
+  case KEY_ESC:
+    exit(1);
+    break;
   case PLUS:
     alpha++;
     break;
@@ -170,4 +170,3 @@ void render_scene()
   glFlush();
 
 }
-

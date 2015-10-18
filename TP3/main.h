@@ -196,7 +196,7 @@ vector<Triangle*> triangulation() {
   }
   copy.push_back(i+1);
   EC = copy;
-  
+
 }
 
 cout << "ALGO OK" << endl;
@@ -274,7 +274,7 @@ void flip(Triangle* t1, Triangle* t2, std::vector<Triangle*> var) {
       // i->voisins = removeTriangle(i->voisins, t2);
     }
   }
-  
+
   for (auto i : t2->voisins) {
     if(!i->equals(t1)) {
       triangles.push_back(i);
@@ -297,7 +297,7 @@ void flip(Triangle* t1, Triangle* t2, std::vector<Triangle*> var) {
     for (auto j : t2->getSommets()) {
       if (i == j) {
        flip.push_back(i);
-     }	
+     }
    }
  }
 
@@ -408,7 +408,7 @@ void delaunay(vector<Triangle*> triangles) {
      v->afficher();
    }
    glFlush();*/
-   
+
    flipped = false;
    std::cout << cpt++ << std::endl;
    for (auto i : triangles) {
@@ -506,7 +506,7 @@ void tp3() {
 
   ok++;
 
-  
+
 }
 
 
@@ -518,7 +518,7 @@ void tp4(int alpha, bool ashape) {
   }
 
   if (ok >=2 ) {
-    if(ashape) 
+    if(ashape)
       alphaShape(alpha, triangles);
     else
       alphaComplexe(alpha, triangles);
@@ -552,9 +552,6 @@ void tp4(int alpha, bool ashape) {
   //*/
   ok++;
 }
-
-
-
 
 void exec(int alpha, bool ashape) {
 

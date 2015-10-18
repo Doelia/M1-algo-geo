@@ -45,4 +45,3 @@ ostream& operator<<(ostream &flux, Segment& v) {
    // flux << "[" << v.x->getX() <<  "]";
     return flux;
 }
-
